@@ -42,13 +42,13 @@ const MongoHandler = () => {
   return mu;
 };
 
-const mu = MongoHandler();
+// const mu = MongoHandler();
 
-mu.connect()
-  .then(client => mu.getCollections(client, "nlf_main_db"))
-  .then(collections => {
-    console.log("las collecciones son", collections);
-  })
-  .catch(err => console.log("errorcito", err));
+// mu.connect()
+//   .then(client => mu.getCollections(client, "nlf_main_db"))
+//   .then(collections => {
+//     console.log("las collecciones son", collections);
+//   })
+//   .catch(err => console.log("errorcito", err));
 
 module.exports = MongoHandler;

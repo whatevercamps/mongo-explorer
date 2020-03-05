@@ -44,7 +44,7 @@ app.get("/collections", (req, res) => {
         console.log("errorcito", err);
         res.json({ error: err });
       });
-  else req.json({ error: "U have to send me the name of database" });
+  else res.json({ error: "U have to send me the name of database" });
 });
 
 // catch 404 and forward to error handler
