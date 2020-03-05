@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="author" content="David Bautista" />
+    <meta name="description" content="A simple explorer :D" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <title>Mongo explorer</title>
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+
+    <link
+      href="https://fonts.googleapis.com/css?family=Nunito+Sans&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Link to Bootstrap 4 framework -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-6">
+          <div class="row">
+            <h1>Mongo Explorer</h1>
+          </div>
+          <div class="row">
+            <select id="databasesSelector">
+              <%databases.forEach((db, index) => { %>
+              <option id="<%= index %>" value="<%= db.name %>"
+                ><%= db.name %></option
+              >
+              <% }) %>
+            </select>
+          </div>
+        </div>
+        <div class="col-lg-6"></div>
+      </div>
+    </div>
+
+    <p>Welcome to <%= %></p>
+  </body>
+  <script src="/javascripts/index.js"></script>
+</html>
