@@ -24,29 +24,261 @@
       integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
       crossorigin="anonymous"
     />
+
+    <script
+      src="https://kit.fontawesome.com/42bffecd35.js"
+      crossorigin="anonymous"
+    ></script>
   </head>
   <body>
     <div class="container">
       <div class="row">
-        <div class="col-lg-6">
-          <div class="row">
-            <h1>Mongo Explorer</h1>
-          </div>
-          <div class="row">
-            <select id="databasesSelector">
-              <%databases.forEach((db, index) => { %>
-              <option id="<%= index %>" value="<%= db.name %>"
-                ><%= db.name %></option
-              >
-              <% }) %>
-            </select>
+        <div class="col-12 text-center">
+          <h1>Mongo Explorer</h1>
+        </div>
+      </div>
+      <div class="row" style="margin-bottom: 10px;">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header text-center">
+              <h4>Set your custom mongo database</h4>
+            </div>
+            <div class="card-body">
+              <div class="row" id="accessForms">
+                <div class="col-md-8 first">
+                  <form id="connectForm">
+                    <div class="form-group">
+                      <label for="dburl">
+                        URL:
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="dburl"
+                          placeholder="valid url"
+                          required
+                        />
+                      </label>
+                    </div>
+                    <div class="form-group text-center">
+                      <button type="submit" class="btn btn-primary">
+                        Set url -->
+                      </button>
+                    </div>
+                  </form>
+                </div>
+                <div id="stepsContainer" class="col-md-4 second disabled">
+                  <h5>
+                    DB connection check
+                  </h5>
+                  <ul>
+                    <li id="stepReady"><i class="far fa-clock"></i> Ready</li>
+                    <li id="stepConnected">
+                      <i class="far fa-clock"></i> Connected
+                    </li>
+                    <li id="stepAuth">
+                      <i class="far fa-clock"></i> Authenticated
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="col-lg-6"></div>
+      </div>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="card">
+            <div class="card-header">
+              <label>
+                Select a database:
+                <select id="databasesSelector">
+                  <%databases.forEach((db, index) => { %>
+                  <option id="<%= index %>" value="<%= db.name %>"
+                    ><%= db.name %></option
+                  >
+                  <% }) %>
+                </select>
+              </label>
+            </div>
+            <div class="card-body" id="collectionsList">
+              <div class="container" id="containerCollections">
+                <% collections.forEach(collection => { %>
+                <div class="row">
+                  <div class="col-12">
+                    <div class="card collectionCard" data-dbname=<%=
+                    collection.stats.ns.split(".")[0] %> data-colname=<%=
+                    collection.stats.ns.split(".")[1] %> >
+                    <div class="card-body">
+                      <h5 class="card-title">
+                        <%= collection.name %> collection
+                      </h5>
+                      <h6 class="card-subtitle mb-2 text-muted">
+                        <%= collection.stats.count %> documents
+                      </h6>
+                      <p class="card-text">
+                        col. size: <%= collection.stats.size %> Bytes <br />
+                        avg. doc. size: <%= collection.stats.avgObjSize %>
+                        Bytes<br />
+                        size in storage: <%= collection.stats.storageSize %>
+                        Bytes<br />
+                      </p>
+                    </div>
+                    <div class="card-footer">
+                      <a>See documents</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <% }) %>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-5">
+        <div class="card">
+          <div class="card-header">
+            <h5>See collection documents</h5>
+          </div>
+          <div class="card-body" id="documentsList">
+            <div class="accordion" id="containerDocuments"></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3" id="optionsContainer">
+        <div class="accordion disabled" id="documentWorkDesk">
+          <div class="card">
+            <div class="card-header" id="headingCreateSpace">
+              <h2 class="mb-0">
+                <button
+                  class="btn"
+                  type="button"
+                  data-toggle="collapse"
+                  data-target="#collapseCreateSpace"
+                  aria-expanded="true"
+                  aria-controls="collapseCreateSpace"
+                >
+                  <h5>Create Document</h5>
+                </button>
+              </h2>
+            </div>
+
+            <div
+              id="collapseCreateSpace"
+              class="optionDocument collapse show"
+              aria-labelledby="headingCreateSpace"
+              data-parent="#documentWorkDesk"
+            >
+              <div class="card-body">
+                <form id="documentWorkDeskForm">
+                  <div class="form-group">
+                    <label for="newJsonDocumentInput">
+                      <span>JSON.parse(</span>
+                      <textarea
+                        type="text"
+                        class="form-control"
+                        id="newJsonDocumentInput"
+                        required
+                      ></textarea>
+                      <span>)</span>
+                    </label>
+                  </div>
+                  <label for="jsonPreview" class="preview">
+                    Preview
+                    <pre
+                      class="prettyprint"
+                      style="border: none;"
+                    ><code class="languaje-javascript linenums" id="jsonPreview"></code></pre>
+                  </label>
+
+                  <button
+                    id="newJsonDocumentButton"
+                    class="btn btn-success"
+                    type="submit"
+                  >
+                    Create
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+          <!-- form to update -->
+          <div class="card">
+            <div class="card-header" id="headingCreateSpace">
+              <h2 class="mb-0">
+                <button
+                  class="btn"
+                  type="button"
+                  data-toggle="collapse"
+                  data-target="#collapseUpdateSpace"
+                  aria-expanded="true"
+                  aria-controls="collapseUpdateSpace"
+                >
+                  <h5>Update Document</h5>
+                </button>
+              </h2>
+            </div>
+
+            <div
+              id="collapseUpdateSpace"
+              class="optionDocument collapse"
+              aria-labelledby="headingUpdateSpace"
+              data-parent="#documentWorkDesk"
+            >
+              <div class="card-body">
+                <form id="documentUpdateForm">
+                  <div class="form-group">
+                    <label for="updateJsonDocumentInput">
+                      <span>JSON.parse(</span>
+                      <textarea
+                        type="text"
+                        class="form-control"
+                        id="updateJsonDocumentInput"
+                        required
+                      ></textarea>
+                      <span>)</span>
+                    </label>
+                  </div>
+                  <label for="jsonPreviewUpdate" class="preview">
+                    Preview
+                    <pre
+                      class="prettyprint"
+                      style="border: none;"
+                    ><code class="languaje-javascript linenums" id="jsonPreviewUpdate"></code></pre>
+                  </label>
+
+                  <button
+                    id="updateJsonDocumentButton"
+                    class="btn btn-warning"
+                    type="submit"
+                  >
+                    Update
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-
-    <p>Welcome to <%= %></p>
   </body>
+  <!-- JQuery link -->
+  <script
+    src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+    integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+    crossorigin="anonymous"
+  ></script>
+  <!-- Popper link -->
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"
+    integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
+    crossorigin="anonymous"
+  ></script>
+  <!-- Bootstrap js link -->
+  <script
+    src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+    integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+    crossorigin="anonymous"
+  ></script>
   <script src="/javascripts/index.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
 </html>

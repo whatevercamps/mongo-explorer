@@ -4,5 +4,56 @@ body {
 }
 
 a {
-  color: #00B7FF;
+  color: #00b7ff;
+}
+
+#collectionsList {
+  min-height: 300px;
+  max-height: 500px;
+  overflow-y: scroll;
+}
+
+label {
+  width: 100%;
+}
+
+#accessForms .first,
+.second {
+  border-right: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.disabled {
+  opacity: 0.1;
+  pointer-events: none;
+}
+
+.collectionCard {
+  cursor: pointer;
+  margin-bottom: 5px;
+  padding: 3px;
+}
+
+.documentCard {
+  cursor: pointer;
+  margin-bottom: 5px;
+  padding: 3px;
+}
+
+#documentsList {
+  min-height: 300px;
+  max-height: 500px;
+  overflow-y: scroll;
+}
+
+.prettyprint {
+  border: none;
+}
+
+.accordion .card {
+  width: 100%;
+}
+
+.optionsContainer,
+.optionsContainer * {
+  transition: all 1s ease-out;
 }
