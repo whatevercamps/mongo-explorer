@@ -54,7 +54,7 @@
                           type="text"
                           class="form-control"
                           id="dburl"
-                          placeholder="valid url"
+                          placeholder="e.g: mongodb+srv://admin:admin@nfl-db-jh1co.mongodb.net"
                           required
                         />
                       </label>
@@ -85,6 +85,11 @@
           </div>
         </div>
       </div>
+      <div class="row text-center">
+        <div id="exampleGuide" class="col-12 text-center">
+          <h4>Or use the Example DB</h4>
+        </div>
+      </div>
       <div class="row">
         <div class="col-md-4">
           <div class="card">
@@ -105,7 +110,8 @@
                 <% collections.forEach(collection => { %>
                 <div class="row">
                   <div class="col-12">
-                    <div class="card collectionCard" data-dbname=<%=
+                    <div class="card collectionCard" data-count=<%=
+                    collection.stats.count %> data-dbname=<%=
                     collection.stats.ns.split(".")[0] %> data-colname=<%=
                     collection.stats.ns.split(".")[1] %> >
                     <div class="card-body">
@@ -142,6 +148,7 @@
           <div class="card-body" id="documentsList">
             <div class="accordion" id="containerDocuments"></div>
           </div>
+          <div id="paginationContainer" class="card-footer text-center"></div>
         </div>
       </div>
       <div class="col-md-3" id="optionsContainer">

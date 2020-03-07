@@ -32,6 +32,7 @@ const stepConnected = document.querySelector("#stepConnected");
 const stepAuth = document.querySelector("#stepAuth");
 
 let contextData = {};
+let lastPag = 0;
 
 let isUpdate = false;
 
@@ -109,7 +110,7 @@ const createDocument = (dbName, colName, doc) => {
     .then(resp => resp.json())
     .then(data => {
       if (data.success) {
-        getDocuments(dbName, colName);
+        getDocuments(dbName, colName, 1);
         getCollections(dbName);
       }
     });
@@ -175,7 +176,7 @@ const deleteDocument = doc => {
       .then(resp => resp.json())
       .then(data => {
         if (data.success) {
-          getDocuments(contextData["dbName"], contextData["collectionName"]);
+          getDocuments(contextData["dbName"], contextData["collectionName"], 1);
           getCollections(contextData["dbName"]);
         }
       });
@@ -203,7 +204,11 @@ const updateDocument = (doc, secondDoc) => {
         .then(resp => resp.json())
         .then(data => {
           if (data.success) {
-            getDocuments(contextData["dbName"], contextData["collectionName"]);
+            getDocuments(
+              contextData["dbName"],
+              contextData["collectionName"],
+              1
+            );
             getCollections(contextData["dbName"]);
           }
         });
@@ -229,10 +234,10 @@ const updateDocument = (doc, secondDoc) => {
   }
 };
 
-const getDocuments = (dbName, collectionName) => {
+const getDocuments = (dbName, collectionName, paginationIndex) => {
   fetch(
     `/documents/${contextData["url"] ||
-      "default_y22__y1237"}/?dbname=${dbName}&colname=${collectionName}`
+      "default_y22__y1237"}/?dbname=${dbName}&colname=${collectionName}&pag=${paginationIndex}`
   )
     .then(res => res.json())
     .then(data => {
@@ -313,6 +318,46 @@ ${JSON.stringify(doc).replace(/,/g, ", \n")}
               .querySelector(`#updateDocumentButtonContainer${doc._id}`)
               .appendChild(buttonUpdate);
           });
+          console.log("si", lastPag);
+          if (lastPag) {
+            let pag = document.createElement("nav");
+            let ulPag = document.createElement("ul");
+            ulPag.className = "pagination justify-content-center";
+            ulPag.id = "pagination";
+
+            let ilFirstPag = document.createElement("li");
+            ilFirstPag.className = "page-item";
+            ilFirstPag.innerHTML = "<a class='page-link'>first</a>";
+            ilFirstPag.addEventListener("click", () =>
+              getDocuments(dbName, collectionName, 1)
+            );
+            ulPag.appendChild(ilFirstPag);
+
+            for (
+              let index = Math.max(2, +paginationIndex - 1);
+              index <= Math.min(+paginationIndex + 2, +lastPag - 1);
+              index++
+            ) {
+              let ilPag = document.createElement("li");
+              ilPag.className = "page-item";
+              ilPag.innerHTML = `<a class="page-link">${index}</a>`;
+              ilPag.addEventListener("click", () =>
+                getDocuments(dbName, collectionName, index)
+              );
+              ulPag.appendChild(ilPag);
+            }
+            let ilLastPag = document.createElement("li");
+            ilLastPag.className = "page-item";
+            ilLastPag.innerHTML = "<a class='page-link'>last</a>";
+            ilLastPag.addEventListener("click", () =>
+              getDocuments(dbName, collectionName, +lastPag)
+            );
+            ulPag.appendChild(ilLastPag);
+            pag.appendChild(ulPag);
+            let pagination = document.querySelector("#paginationContainer");
+            pagination.innerHTML = "";
+            pagination.appendChild(pag);
+          }
           PR.prettyPrint();
         }
       }
@@ -324,8 +369,13 @@ if (collections)
     collection.addEventListener("click", () => {
       let dbName = collection.dataset.dbname;
       let colName = collection.dataset.colname;
-      console.log({ dbName: dbName, colName: colName });
-      getDocuments(dbName, colName);
+      let count = +collection.dataset.count;
+      console.log("hola", { dbName: dbName, colName: colName, count: count });
+      if (count > 20) {
+        console.log("guardando lastPag", Math.ceil(count / 20));
+        lastPag = Math.ceil(count / 20);
+      }
+      getDocuments(dbName, colName, 1);
     });
   });
 else console.log("no hay collecciones", collections);
@@ -356,6 +406,8 @@ if (connectForm)
             stepReady.style.color = "green";
             stepConnected.style.color = "green";
             stepAuth.style.color = "green";
+
+            document.querySelector("#exampleGuide").remove();
 
             dbSelector.innerHTML = "";
             contextData["url"] = url;
@@ -455,8 +507,12 @@ const getCollections = dbName => {
             element.addEventListener("click", () => {
               let dbName = collection.stats.ns.split(".")[0];
               let colName = collection.stats.ns.split(".")[1];
-
-              getDocuments(dbName, colName);
+              if (collection.stats.count > 20) {
+                lastPag = Math.ceil(+collection.stats.count / 20);
+              } else {
+                lastPag = 0;
+              }
+              getDocuments(dbName, colName, 1);
             });
             containerCollections.appendChild(element);
           });

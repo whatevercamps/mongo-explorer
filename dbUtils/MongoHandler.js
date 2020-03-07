@@ -51,11 +51,12 @@ const MongoHandler = () => {
       });
   };
 
-  mu.getDocuments = (client, dbName, collectionName) => {
+  mu.getDocuments = (client, dbName, collectionName, pag) => {
     return client
       .db(dbName)
       .collection(collectionName)
       .find({})
+      .skip(20 * (+pag - 1))
       .limit(20)
       .sort({ _id: -1 })
       .toArray()

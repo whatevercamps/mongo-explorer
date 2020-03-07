@@ -22,7 +22,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 //bellos endpoints
-app.get("/databases", (req, res) => {
+app.get(/\/(databases)*/, (req, res) => {
   mu.connect()
     .then(client => mu.getDatabases(client))
     .then(databases => {
@@ -99,6 +99,7 @@ app.get("/connect/*", (req, res) => {
 app.get("/documents/*/", (req, res) => {
   const dbName = req.query["dbname"];
   const colName = req.query["colname"];
+  const pag = req.query["pag"];
   const url = req.params[0];
   console.log("data", { dbName: dbName, colName: colName, url: url });
   if (!dbName || !colName || !dbName.length || !colName.length)
@@ -109,7 +110,7 @@ app.get("/documents/*/", (req, res) => {
   else
     mu.connect(url.includes("default_y22__y1237") ? undefined : url)
       .then(client => {
-        mu.getDocuments(client, dbName, colName).then(documents => {
+        mu.getDocuments(client, dbName, colName, pag).then(documents => {
           res.json({ success: true, documents: documents });
         });
       })
