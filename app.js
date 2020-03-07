@@ -22,7 +22,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 //bellos endpoints
-app.get(/\/(databases)*/, (req, res) => {
+app.get("/+(databases)?", (req, res) => {
   mu.connect()
     .then(client => mu.getDatabases(client))
     .then(databases => {
