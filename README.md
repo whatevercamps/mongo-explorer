@@ -43,7 +43,7 @@ Hi! This is a small project that tries to implement some features for exploring 
 
 # Demo
 
-The funcional demo was deployed using Heroku and you can find it clicking that 👉🏻 [demo](https://whata-mongo-explorer.herokuapp.com/)
+The funcional demo was deployed using Heroku and you can find it clicking that 👉🏻 [demo](https://whata-mongo-explorer.herokuapp.com/databases)
 
 # To-dos (for pull requests ❤️)
 
